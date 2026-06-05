@@ -1,6 +1,3 @@
-# quarter-performance-web
-실적 관리[README.md](https://github.com/user-attachments/files/28624405/README.md)
-
 # 분기별 사업 실적 취합 시트 웹페이지
 
 GitHub Pages에 올려 사용할 수 있는 정적 웹페이지입니다. 입력 데이터는 현재 브라우저의 localStorage에 저장되며, JSON 백업/불러오기와 CSV 내보내기를 지원합니다.
