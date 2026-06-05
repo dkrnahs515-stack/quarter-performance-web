@@ -4,222 +4,72 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>분기별 사업 실적 취합 시트</title>
-  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <style>
+    :root{--bg:#f5f7fb;--panel:#fff;--ink:#172033;--muted:#64748b;--line:#d9e1ec;--primary:#2563eb;--primary2:#1e40af;--danger:#dc2626;--warn:#d97706;--ok:#059669;--soft:#eef4ff;--red:#fff1f2;--green:#ecfdf5;--shadow:0 12px 30px rgba(15,23,42,.08)}
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font-family:Pretendard,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    .app-header{display:flex;justify-content:space-between;gap:24px;align-items:center;padding:34px clamp(18px,4vw,48px);background:linear-gradient(135deg,#0f172a,#1d4ed8);color:#fff}.eyebrow{margin:0 0 8px;color:#bfdbfe;font-weight:800;letter-spacing:.08em;text-transform:uppercase}h1{margin:0;font-size:clamp(28px,4vw,42px)}.subtitle{margin:12px 0 0;color:#dbeafe}.layout{padding:24px clamp(14px,4vw,48px) 56px;display:grid;gap:18px}.panel,.kpi-card{background:var(--panel);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}.panel{padding:22px}.dashboard{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:14px}.kpi-card{padding:20px}.kpi-card span{display:block;color:var(--muted);font-size:14px;margin-bottom:10px}.kpi-card strong{font-size:34px}.warning-card{background:var(--red)}.section-title{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:16px}.section-title h2{margin:0;font-size:20px}.section-title span{color:var(--muted);font-size:13px}.grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.form-grid{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:14px}.import-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.import-box{border:1px solid var(--line);border-radius:16px;padding:16px;background:#fff}.import-box h3{margin:0 0 8px}.import-box p{margin:0 0 12px;color:var(--muted);font-size:14px}.wide{grid-column:1/-1}label{display:grid;gap:7px;font-size:13px;font-weight:800;color:#374151}input,select,textarea{width:100%;border:1px solid var(--line);border-radius:12px;padding:11px 12px;background:#fff;color:var(--ink);font:inherit;outline:none}textarea{resize:vertical}input:focus,select:focus,textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.14)}button,.file-button{border:0;border-radius:12px;padding:11px 15px;font-weight:900;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px}.primary{background:var(--primary);color:#fff}.primary:hover{background:var(--primary2)}.ghost{background:#eef2ff;color:#1e3a8a}.danger{background:#fee2e2;color:var(--danger)}.file-button{background:#f3f4f6;color:#374151}.file-button input{display:none}.button-row,.form-actions,.header-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.hint-box,.analysis-box{background:var(--soft);border:1px solid #bfdbfe;border-radius:16px;padding:14px 16px;color:#1e3a8a}.hint-box ul{margin:8px 0 0;padding-left:20px}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:14px}table{width:100%;border-collapse:collapse;min-width:1120px;background:#fff}th,td{padding:11px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;font-size:13px}th{position:sticky;top:0;background:#f8fafc;z-index:1;font-weight:900;color:#334155}tr:hover td{background:#f8fbff}.badge{display:inline-flex;align-items:center;gap:5px;padding:5px 8px;border-radius:999px;font-size:12px;font-weight:900;white-space:nowrap}.badge.ok{background:var(--green);color:var(--ok)}.badge.warn{background:#fffbeb;color:var(--warn)}.badge.error{background:var(--red);color:var(--danger)}.validation-list{display:grid;gap:10px}.validation-item{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:#fff}.validation-item.error{border-color:#fecdd3;background:#fff1f2}.validation-item.warn{border-color:#fde68a;background:#fffbeb}.validation-item strong{display:block;margin-bottom:4px}.empty-state{padding:24px;text-align:center;color:var(--muted)}.mono{font-variant-numeric:tabular-nums;white-space:nowrap}.row-actions{display:flex;gap:6px}.row-actions button{padding:7px 9px;border-radius:9px}.small{font-size:12px;color:var(--muted)}.pill-list{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.pill{background:#f1f5f9;border:1px solid #dbe4ef;border-radius:999px;padding:5px 9px;font-size:12px}.hidden{display:none!important}
+    @media(max-width:960px){.app-header{align-items:flex-start;flex-direction:column}.dashboard{grid-template-columns:repeat(2,minmax(0,1fr))}.form-grid,.import-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:640px){.dashboard,.grid-2,.form-grid,.import-grid{grid-template-columns:1fr}.panel{padding:16px}}@media print{body{background:#fff}.app-header{color:#111827;background:#fff;padding:18px 0 12px}.layout{padding:0}.no-print,.form-panel,.controls,.import-panel{display:none!important}.panel,.kpi-card{box-shadow:none;border-color:#d1d5db;break-inside:avoid}table{min-width:100%;font-size:11px}th,td{padding:7px}}
+  </style>
 </head>
 <body>
   <header class="app-header">
-    <div>
-      <p class="eyebrow">Quarter Performance Collector</p>
-      <h1>분기별 사업 실적 취합 시트</h1>
-      <p class="subtitle">사업 실적 원장 입력 → 자체 검증 → 카테고리 순 정렬 → 분기 요약 출력</p>
-    </div>
-    <div class="header-actions no-print">
-      <button id="btnSample" class="ghost">예시 불러오기</button>
-      <button id="btnPrint" class="primary">요약 인쇄</button>
-    </div>
+    <div><p class="eyebrow">Quarter Performance Collector</p><h1>분기별 사업 실적 취합 시트</h1><p class="subtitle">엑셀 붙여넣기·파일 불러오기 → 자동 변환 → 자체 검증 → 카테고리 순 정렬 → 분기 요약 출력</p></div>
+    <div class="header-actions no-print"><button id="btnSample" class="ghost">예시 불러오기</button><button id="btnPrint" class="primary">요약 인쇄</button></div>
   </header>
-
   <main class="layout">
-    <section class="panel controls no-print">
-      <div class="section-title">
-        <h2>기준 설정</h2>
-        <span>검증 기준</span>
-      </div>
-      <div class="grid-2">
-        <label>연도
-          <input id="filterYear" type="number" value="2026" min="2020" max="2100" />
-        </label>
-        <label>분기
-          <select id="filterQuarter">
-            <option value="1">1분기</option>
-            <option value="2">2분기</option>
-            <option value="3">3분기</option>
-            <option value="4">4분기</option>
-          </select>
-        </label>
-      </div>
-      <div class="hint-box">
-        <strong>검증 항목</strong>
-        <ul>
-          <li>필수 입력 누락, 날짜 형식, 분기 범위 이탈</li>
-          <li>종료일이 시작일보다 빠른 경우</li>
-          <li>보고 총인원과 대상별 인원 합계 불일치</li>
-          <li>회기·인원·금액 음수 입력, 중복 사업 의심</li>
-          <li>카테고리 표준 순서 자동 정렬</li>
-        </ul>
-      </div>
-    </section>
-
-    <section class="dashboard">
-      <article class="kpi-card">
-        <span>등록 사업</span>
-        <strong id="kpiRecords">0</strong>
-      </article>
-      <article class="kpi-card">
-        <span>총 회기</span>
-        <strong id="kpiSessions">0</strong>
-      </article>
-      <article class="kpi-card">
-        <span>총 참여인원</span>
-        <strong id="kpiPeople">0</strong>
-      </article>
-      <article class="kpi-card warning-card">
-        <span>검증 이슈</span>
-        <strong id="kpiIssues">0</strong>
-      </article>
-    </section>
-
-    <section class="panel form-panel no-print">
-      <div class="section-title">
-        <h2>사업 실적 입력</h2>
-        <span id="editingLabel">신규 입력</span>
-      </div>
-      <form id="recordForm">
-        <input id="recordId" type="hidden" />
-        <div class="form-grid">
-          <label>팀명 *
-            <select id="team" required>
-              <option value="">선택</option>
-              <option>운영지원팀</option>
-              <option>교육문화팀</option>
-              <option>청소년사업팀</option>
-              <option>청소년아지트</option>
-              <option>기타</option>
-            </select>
-          </label>
-          <label>대분류 *
-            <select id="category" required></select>
-          </label>
-          <label>세부유형
-            <input id="subCategory" placeholder="예: 학교연계, 인증제, 동아리, 정기강좌" />
-          </label>
-          <label>사업/프로그램명 *
-            <input id="programName" required placeholder="예: 출발 재미짐, 교육문화 프로그램" />
-          </label>
-          <label>시작일 *
-            <input id="startDate" type="date" required />
-          </label>
-          <label>종료일
-            <input id="endDate" type="date" />
-          </label>
-          <label>장소
-            <input id="location" placeholder="예: 강서청소년회관, 스마트 체육관" />
-          </label>
-          <label>대상
-            <input id="target" placeholder="예: 초등 청소년, 지역주민, 지도자" />
-          </label>
-          <label>회기 수 *
-            <input id="sessions" type="number" min="0" step="1" value="1" required />
-          </label>
-          <label>청소년 인원 *
-            <input id="youthCount" type="number" min="0" step="1" value="0" required />
-          </label>
-          <label>성인/보호자 인원
-            <input id="adultCount" type="number" min="0" step="1" value="0" />
-          </label>
-          <label>지도자/인솔자 인원
-            <input id="leaderCount" type="number" min="0" step="1" value="0" />
-          </label>
-          <label>총 참여인원 보고값 *
-            <input id="reportedTotal" type="number" min="0" step="1" value="0" required />
-          </label>
-          <label>수입
-            <input id="revenue" type="number" step="1000" value="0" />
-          </label>
-          <label>지출
-            <input id="expense" type="number" step="1000" value="0" />
-          </label>
-          <label>담당자
-            <input id="manager" placeholder="담당자명" />
-          </label>
-          <label class="wide">비고/근거
-            <textarea id="memo" rows="3" placeholder="증빙자료, 특이사항, 산출 근거 등을 입력"></textarea>
-          </label>
-        </div>
-        <div class="form-actions">
-          <button type="submit" class="primary">저장/수정</button>
-          <button type="button" id="btnReset" class="ghost">입력 초기화</button>
-          <button type="button" id="btnAutoTotal" class="ghost">총인원 자동계산</button>
-        </div>
-      </form>
-    </section>
-
-    <section class="panel validation-panel">
-      <div class="section-title">
-        <h2>자체 검증 결과</h2>
-        <span id="validationStatus">대기</span>
-      </div>
-      <div id="validationList" class="validation-list"></div>
-    </section>
-
-    <section class="panel">
-      <div class="section-title">
-        <h2>카테고리별 요약</h2>
-        <span>표준 순서 자동 정렬</span>
-      </div>
-      <div class="table-wrap">
-        <table id="summaryTable">
-          <thead>
-            <tr>
-              <th>순서</th>
-              <th>대분류</th>
-              <th>사업 수</th>
-              <th>회기</th>
-              <th>청소년</th>
-              <th>총 참여</th>
-              <th>평균 인원</th>
-              <th>수입</th>
-              <th>지출</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </section>
-
-    <section class="panel records-panel">
-      <div class="section-title">
-        <h2>실적 원장</h2>
-        <div class="button-row no-print">
-          <button id="btnExportCsv" class="ghost">CSV 내보내기</button>
-          <button id="btnExportJson" class="ghost">JSON 백업</button>
-          <label class="file-button">JSON 불러오기
-            <input id="importJson" type="file" accept="application/json" />
-          </label>
-          <button id="btnClearAll" class="danger">전체 삭제</button>
-        </div>
-      </div>
-      <div class="table-wrap">
-        <table id="recordsTable">
-          <thead>
-            <tr>
-              <th>상태</th>
-              <th>팀</th>
-              <th>대분류</th>
-              <th>프로그램명</th>
-              <th>기간</th>
-              <th>회기</th>
-              <th>청소년</th>
-              <th>성인</th>
-              <th>지도자</th>
-              <th>보고 총인원</th>
-              <th>계산 총인원</th>
-              <th>평균</th>
-              <th>수입</th>
-              <th>지출</th>
-              <th class="no-print">관리</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </section>
+    <section class="panel controls no-print"><div class="section-title"><h2>기준 설정</h2><span>검증 기준</span></div><div class="grid-2"><label>연도<input id="filterYear" type="number" value="2026" min="2020" max="2100" /></label><label>분기<select id="filterQuarter"><option value="1">1분기</option><option value="2">2분기</option><option value="3">3분기</option><option value="4">4분기</option></select></label></div><div class="hint-box"><strong>검증 항목</strong><ul><li>필수 입력 누락, 날짜 형식, 분기 범위 이탈</li><li>종료일이 시작일보다 빠른 경우</li><li>보고 총인원과 대상별 인원 합계 불일치</li><li>회기·인원·금액 음수 입력, 중복 사업 의심</li><li>엑셀 헤더 자동 인식, 카테고리 표준 순서 자동 정렬</li></ul></div></section>
+    <section class="dashboard"><article class="kpi-card"><span>등록 사업</span><strong id="kpiRecords">0</strong></article><article class="kpi-card"><span>총 회기</span><strong id="kpiSessions">0</strong></article><article class="kpi-card"><span>총 참여인원</span><strong id="kpiPeople">0</strong></article><article class="kpi-card warning-card"><span>검증 이슈</span><strong id="kpiIssues">0</strong></article></section>
+    <section class="panel import-panel no-print"><div class="section-title"><h2>엑셀 불러오기 / 붙여넣기</h2><span id="importStatus">대기</span></div><div class="import-grid"><div class="import-box"><h3>① 엑셀 파일 읽기</h3><p>기존 .xlsx, .xls, .csv 파일을 선택하면 첫 번째 시트를 읽고 표준 원장으로 변환합니다.</p><div class="button-row"><label class="file-button">엑셀 선택<input id="importExcel" type="file" accept=".xlsx,.xls,.csv" /></label><select id="sheetSelect" disabled><option>시트 선택 전</option></select></div></div><div class="import-box"><h3>② 엑셀 표 붙여넣기</h3><p>엑셀에서 표 범위를 복사한 뒤 아래 칸에 붙여넣고 분석을 누르세요.</p><textarea id="pasteArea" rows="6" placeholder="엑셀 표를 그대로 붙여넣기"></textarea></div></div><div class="form-actions" style="margin-top:14px"><button id="btnAnalyzeImport" class="primary">엑셀 읽고 분석하기</button><select id="importMode"><option value="append">기존 원장에 추가</option><option value="replaceQuarter">현재 연도/분기 자료 교체</option><option value="replaceAll">전체 원장 교체</option></select><button id="btnApplyImport" class="ghost" disabled>분석 결과 원장에 반영</button></div><div id="importAnalysis" class="analysis-box" style="margin-top:14px">엑셀 파일을 선택하거나 표를 붙여넣은 뒤 분석을 실행하세요.</div></section>
+    <section class="panel form-panel no-print"><div class="section-title"><h2>사업 실적 입력</h2><span id="editingLabel">신규 입력</span></div><form id="recordForm"><input id="recordId" type="hidden" /><div class="form-grid"><label>팀명 *<select id="team" required><option value="">선택</option><option>운영지원팀</option><option>교육문화팀</option><option>청소년사업팀</option><option>청소년아지트</option><option>기타</option></select></label><label>대분류 *<select id="category" required></select></label><label>세부유형<input id="subCategory" placeholder="예: 학교연계, 인증제, 동아리, 정기강좌" /></label><label>사업/프로그램명 *<input id="programName" required placeholder="예: 출발 재미짐, 교육문화 프로그램" /></label><label>시작일 *<input id="startDate" type="date" required /></label><label>종료일<input id="endDate" type="date" /></label><label>장소<input id="location" placeholder="예: 강서청소년회관, 스마트 체육관" /></label><label>대상<input id="target" placeholder="예: 초등 청소년, 지역주민, 지도자" /></label><label>회기 수 *<input id="sessions" type="number" min="0" step="1" value="1" required /></label><label>청소년 인원 *<input id="youthCount" type="number" min="0" step="1" value="0" required /></label><label>성인/보호자 인원<input id="adultCount" type="number" min="0" step="1" value="0" /></label><label>지도자/인솔자 인원<input id="leaderCount" type="number" min="0" step="1" value="0" /></label><label>총 참여인원 보고값 *<input id="reportedTotal" type="number" min="0" step="1" value="0" required /></label><label>수입<input id="revenue" type="number" step="1000" value="0" /></label><label>지출<input id="expense" type="number" step="1000" value="0" /></label><label>담당자<input id="manager" placeholder="담당자명" /></label><label class="wide">비고/근거<textarea id="memo" rows="3" placeholder="증빙자료, 특이사항, 산출 근거 등을 입력"></textarea></label></div><div class="form-actions" style="margin-top:14px"><button type="submit" class="primary">저장/수정</button><button type="button" id="btnReset" class="ghost">입력 초기화</button><button type="button" id="btnAutoTotal" class="ghost">총인원 자동계산</button></div></form></section>
+    <section class="panel validation-panel"><div class="section-title"><h2>자체 검증 결과</h2><span id="validationStatus">대기</span></div><div id="validationList" class="validation-list"></div></section>
+    <section class="panel"><div class="section-title"><h2>카테고리별 요약</h2><div class="button-row no-print"><button id="btnExportXlsx" class="primary">엑셀 내보내기</button><button id="btnExportCsv" class="ghost">CSV 내보내기</button><button id="btnExportJson" class="ghost">JSON 백업</button><label class="file-button">JSON 불러오기<input id="importJson" type="file" accept="application/json" /></label></div></div><div class="table-wrap"><table id="summaryTable"><thead><tr><th>순서</th><th>대분류</th><th>사업 수</th><th>회기</th><th>청소년</th><th>총 참여</th><th>평균 인원</th><th>수입</th><th>지출</th></tr></thead><tbody></tbody></table></div></section>
+    <section class="panel records-panel"><div class="section-title"><h2>실적 원장</h2><div class="button-row no-print"><button id="btnClearAll" class="danger">전체 삭제</button></div></div><div class="table-wrap"><table id="recordsTable"><thead><tr><th>상태</th><th>팀</th><th>대분류</th><th>프로그램명</th><th>기간</th><th>회기</th><th>청소년</th><th>성인</th><th>지도자</th><th>보고 총인원</th><th>계산 총인원</th><th>평균</th><th>수입</th><th>지출</th><th class="no-print">관리</th></tr></thead><tbody></tbody></table></div></section>
   </main>
-
-  <template id="emptyTemplate">
-    <div class="empty-state">아직 입력된 실적이 없습니다. 예시를 불러오거나 새 실적을 입력해 주세요.</div>
-  </template>
-
-  <script src="app.js"></script>
+<script>
+const STORAGE_KEY="gsyouth-quarter-performance-v2";
+const CATEGORY_ORDER=["강서청소년회관 이용","프로그램 개발 및 외부 공모사업 참여","프로그램 이용현황","학교 교육과정 지원사업","특별 프로그램 운영현황","동아리활동지원사업","교육문화 프로그램 등록현황","청소년아지트 월별 이용현황","지출내역","기타"];
+const numberFields=["sessions","youthCount","adultCount","leaderCount","reportedTotal","revenue","expense"];
+const headerAliases={team:["팀","팀명","부서","담당부서"],category:["대분류","분류","카테고리","영역","구분"],subCategory:["세부유형","소분류","세부구분","유형"],programName:["사업명","프로그램명","활동명","내용","프로그램"],startDate:["시작일","일자","날짜","운영일","기간","일시"],endDate:["종료일","종료","마감일"],location:["장소","운영장소"],target:["대상","이용대상","참여대상"],sessions:["회기","회기수","운영횟수","횟수","건수"],youthCount:["청소년","청소년인원","청소년수","초등","중등","고등"],adultCount:["성인","보호자","지역주민","학부모"],leaderCount:["지도자","인솔자","강사","담당자수"],reportedTotal:["총참여인원","총인원","합계","연인원","참여인원","총계"],revenue:["수입","참가비","수강료","수입액"],expense:["지출","집행액","정산","지출액"],manager:["담당자","작성자"],memo:["비고","근거","특이사항","메모"]};
+const els={filterYear:$("filterYear"),filterQuarter:$("filterQuarter"),form:$("recordForm"),category:$("category"),validationList:$("validationList"),validationStatus:$("validationStatus"),recordsBody:document.querySelector("#recordsTable tbody"),summaryBody:document.querySelector("#summaryTable tbody"),editingLabel:$("editingLabel"),importJson:$("importJson"),importExcel:$("importExcel"),sheetSelect:$("sheetSelect"),pasteArea:$("pasteArea"),importStatus:$("importStatus"),importAnalysis:$("importAnalysis"),btnApplyImport:$("btnApplyImport"),kpiRecords:$("kpiRecords"),kpiSessions:$("kpiSessions"),kpiPeople:$("kpiPeople"),kpiIssues:$("kpiIssues")};
+let records=loadRecords();let workbook=null;let pendingImport=[];
+init();
+function $(id){return document.getElementById(id)}
+function init(){renderCategoryOptions();bindEvents();renderAll()}
+function renderCategoryOptions(){els.category.innerHTML='<option value="">선택</option>'+CATEGORY_ORDER.map(c=>`<option>${esc(c)}</option>`).join("")}
+function bindEvents(){els.form.addEventListener("submit",saveRecord);$("btnReset").addEventListener("click",resetForm);$("btnAutoTotal").addEventListener("click",()=>{$("reportedTotal").value=getNum("youthCount")+getNum("adultCount")+getNum("leaderCount")});$("btnSample").addEventListener("click",loadSample);$("btnPrint").addEventListener("click",()=>window.print());$("btnExportCsv").addEventListener("click",exportCsv);$("btnExportXlsx").addEventListener("click",exportXlsx);$("btnExportJson").addEventListener("click",exportJson);$("btnClearAll").addEventListener("click",clearAll);$("btnAnalyzeImport").addEventListener("click",analyzeImport);els.btnApplyImport.addEventListener("click",applyImport);els.importJson.addEventListener("change",importJson);els.importExcel.addEventListener("change",readExcelFile);els.sheetSelect.addEventListener("change",()=>{pendingImport=[];els.btnApplyImport.disabled=true;els.importAnalysis.textContent="시트를 변경했습니다. 다시 분석해 주세요."});els.filterYear.addEventListener("input",renderAll);els.filterQuarter.addEventListener("change",renderAll);["youthCount","adultCount","leaderCount"].forEach(id=>$(id).addEventListener("input",()=>{const reported=$("reportedTotal");if(!reported.value||Number(reported.value)===0)reported.value=getNum("youthCount")+getNum("adultCount")+getNum("leaderCount")}))}
+function readExcelFile(e){const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=ev=>{try{workbook=XLSX.read(new Uint8Array(ev.target.result),{type:"array",cellDates:true});els.sheetSelect.disabled=false;els.sheetSelect.innerHTML=workbook.SheetNames.map(n=>`<option>${esc(n)}</option>`).join("");els.importStatus.textContent=`${workbook.SheetNames.length}개 시트 읽음`;els.importAnalysis.innerHTML=`<strong>${esc(file.name)}</strong> 파일을 읽었습니다. 시트를 선택한 뒤 분석을 실행하세요.`}catch(err){alert("엑셀 파일을 읽지 못했습니다: "+err.message)}};reader.readAsArrayBuffer(file)}
+function analyzeImport(){let rows=[];let source="";if(workbook&&els.sheetSelect.value){const sheet=workbook.Sheets[els.sheetSelect.value];rows=XLSX.utils.sheet_to_json(sheet,{header:1,defval:"",raw:false});source=`엑셀 시트: ${els.sheetSelect.value}`}else if(els.pasteArea.value.trim()){rows=parsePastedTable(els.pasteArea.value);source="붙여넣기 표"}else{alert("엑셀 파일을 선택하거나 표를 붙여넣어 주세요.");return}const result=convertRowsToRecords(rows);pendingImport=result.records;els.btnApplyImport.disabled=!pendingImport.length;els.importStatus.textContent=pendingImport.length?`변환 ${pendingImport.length}건`:"변환 실패";els.importAnalysis.innerHTML=renderImportAnalysis(result,source)}
+function parsePastedTable(text){return text.trim().split(/\r?\n/).map(line=>line.split("\t").map(v=>v.trim()))}
+function convertRowsToRecords(rows){const clean=rows.filter(r=>Array.isArray(r)&&r.some(c=>String(c).trim()!==""));let headerIndex=-1,headerMap={};for(let i=0;i<Math.min(clean.length,20);i++){const map=detectHeader(clean[i]);if(Object.keys(map).length>=2&&(map.programName!==undefined||map.category!==undefined||map.reportedTotal!==undefined)){headerIndex=i;headerMap=map;break}}if(headerIndex<0)return{records:[],rowCount:clean.length,headerIndex:-1,headerMap:{},missing:["사업명/프로그램명","일자/날짜","총인원/참여인원"],issues:["헤더 행을 찾지 못했습니다."]};const dataRows=clean.slice(headerIndex+1);const year=Number(els.filterYear.value),quarter=Number(els.filterQuarter.value);const records=dataRows.map((row,idx)=>rowToRecord(row,headerMap,year,quarter,idx+headerIndex+2)).filter(r=>r.programName||r.category||calcTotal(r)>0);const missing=[];if(headerMap.programName===undefined)missing.push("사업명/프로그램명");if(headerMap.startDate===undefined)missing.push("일자/날짜");if(headerMap.reportedTotal===undefined&&headerMap.youthCount===undefined)missing.push("총인원 또는 청소년 인원");const issues=getAllIssues(records);return{records,rowCount:clean.length,headerIndex,headerMap,missing,issues}}
+function detectHeader(row){const map={};row.forEach((cell,idx)=>{const key=normalizeHeader(cell);Object.entries(headerAliases).forEach(([field,aliases])=>{if(map[field]!==undefined)return;if(aliases.some(a=>key.includes(normalizeHeader(a))))map[field]=idx})});return map}
+function rowToRecord(row,map,year,quarter,rowNo){const get=field=>map[field]!==undefined?String(row[map[field]]??"").trim():"";let start=toDateInput(get("startDate"));let end=toDateInput(get("endDate"));if(start&&!end&&get("startDate").includes("~")){const parts=get("startDate").split("~");start=toDateInput(parts[0]);end=toDateInput(parts[1])}const y=num(get("youthCount")),a=num(get("adultCount")),l=num(get("leaderCount"));let total=num(get("reportedTotal"));if(!total)total=y+a+l;return{id:uuid(),year,quarter,team:get("team")||"기타",category:matchCategory(get("category")),subCategory:get("subCategory"),programName:get("programName")||`미지정 행 ${rowNo}`,startDate:start||quarterDefaultDate(year,quarter),endDate:end,location:get("location"),target:get("target"),sessions:num(get("sessions"))||1,youthCount:y,adultCount:a,leaderCount:l,reportedTotal:total,revenue:num(get("revenue")),expense:num(get("expense")),manager:get("manager"),memo:get("memo"),sourceRow:rowNo,updatedAt:new Date().toISOString()}}
+function renderImportAnalysis(result,source){const fields=Object.keys(result.headerMap).map(k=>`<span class="pill">${fieldLabel(k)}: ${result.headerMap[k]+1}열</span>`).join("");const err=result.issues.filter(i=>i.level==="error").length;const warn=result.issues.filter(i=>i.level==="warn").length;return `<strong>${esc(source)}</strong><br>원본 행 수: <b>${result.rowCount}</b> / 헤더 위치: <b>${result.headerIndex>=0?result.headerIndex+1+"행":"미인식"}</b> / 변환 가능 행: <b>${result.records.length}</b><br>오류: <b style="color:#dc2626">${err}</b> / 주의: <b style="color:#d97706">${warn}</b>${result.missing.length?`<br>필수 열 미인식: ${result.missing.map(esc).join(", ")}`:""}<div class="pill-list">${fields||"인식된 열 없음"}</div>${result.records.length?"<p class='small'>반영 전 자체 검증 결과를 확인하세요. 오류가 있는 행도 원장에 반영할 수 있으나, 이후 수정이 필요합니다.</p>":""}`}
+function applyImport(){if(!pendingImport.length){alert("반영할 분석 결과가 없습니다.");return}const mode=$("importMode").value;const year=Number(els.filterYear.value),quarter=Number(els.filterQuarter.value);if(mode==="replaceAll")records=[];if(mode==="replaceQuarter")records=records.filter(r=>!(Number(r.year)===year&&Number(r.quarter)===quarter));records.push(...pendingImport);saveRecords();pendingImport=[];els.btnApplyImport.disabled=true;els.importStatus.textContent="원장 반영 완료";renderAll();alert("분석 결과를 원장에 반영했습니다.")}
+function saveRecord(e){e.preventDefault();const record=readForm();const issues=validateRecord(record,records.filter(r=>r.id!==record.id));if(issues.some(i=>i.level==="error")){alert("오류가 있는 항목이 있습니다. 자체 검증 결과를 확인한 뒤 수정해 주세요.");renderValidation([record],records.filter(r=>r.id!==record.id));return}const idx=records.findIndex(r=>r.id===record.id);if(idx>=0)records[idx]=record;else records.push(record);saveRecords();resetForm();renderAll()}
+function readForm(){const id=$("recordId").value||uuid();return{id,year:Number(els.filterYear.value),quarter:Number(els.filterQuarter.value),team:val("team"),category:val("category"),subCategory:val("subCategory"),programName:val("programName"),startDate:val("startDate"),endDate:val("endDate"),location:val("location"),target:val("target"),sessions:getNum("sessions"),youthCount:getNum("youthCount"),adultCount:getNum("adultCount"),leaderCount:getNum("leaderCount"),reportedTotal:getNum("reportedTotal"),revenue:getNum("revenue"),expense:getNum("expense"),manager:val("manager"),memo:val("memo"),updatedAt:new Date().toISOString()}}
+function fillForm(r){$("recordId").value=r.id;Object.entries(r).forEach(([k,v])=>{const input=$(k);if(input)input.value=v??""});els.filterYear.value=r.year;els.filterQuarter.value=r.quarter;els.editingLabel.textContent="수정 중";window.scrollTo({top:0,behavior:"smooth"})}
+function resetForm(){els.form.reset();$("recordId").value="";$("sessions").value=1;numberFields.forEach(id=>$(id).value=0);els.editingLabel.textContent="신규 입력"}
+function renderAll(){const list=getFilteredRecords();const issues=getAllIssues(list);renderKpis(list,issues);renderValidation(list);renderSummary(list);renderRecords(list)}
+function getFilteredRecords(){const y=Number(els.filterYear.value),q=Number(els.filterQuarter.value);return[...records].filter(r=>Number(r.year)===y&&Number(r.quarter)===q).sort(compareRecords)}
+function compareRecords(a,b){return categoryIndex(a.category)-categoryIndex(b.category)||String(a.team).localeCompare(String(b.team),"ko")||String(a.startDate).localeCompare(String(b.startDate))||String(a.programName).localeCompare(String(b.programName),"ko")}
+function categoryIndex(c){const i=CATEGORY_ORDER.indexOf(c);return i===-1?999:i}
+function renderKpis(list,issues){els.kpiRecords.textContent=fmt(list.length);els.kpiSessions.textContent=fmt(sum(list,"sessions"));els.kpiPeople.textContent=fmt(list.reduce((a,r)=>a+calcTotal(r),0));els.kpiIssues.textContent=fmt(issues.length)}
+function renderValidation(list,extra=[]){const target=extra.length?[...extra,...list]:list;const issues=getAllIssues(target);els.validationList.innerHTML="";if(!issues.length){els.validationStatus.textContent="정상";els.validationStatus.style.color="#059669";els.validationList.innerHTML='<div class="validation-item"><strong>검증 완료</strong>현재 기준 분기의 오류가 없습니다.</div>';return}const errors=issues.filter(i=>i.level==="error").length;els.validationStatus.textContent=errors?`오류 ${errors}건`:`주의 ${issues.length}건`;els.validationStatus.style.color=errors?"#dc2626":"#d97706";els.validationList.innerHTML=issues.map(i=>`<div class="validation-item ${i.level}"><strong>${i.level==="error"?"오류":"주의"} · ${esc(i.programName||"입력 중")}</strong><span>${esc(i.message)}</span></div>`).join("")}
+function getAllIssues(list){return list.flatMap((r,i)=>validateRecord(r,list.filter((_,j)=>i!==j)))}
+function validateRecord(r,others=[]){const issues=[];[["team","팀명"],["category","대분류"],["programName","사업/프로그램명"],["startDate","시작일"]].forEach(([k,l])=>{if(!r[k])issues.push(issue("error",r,`${l}이(가) 비어 있습니다.`))});if(!CATEGORY_ORDER.includes(r.category))issues.push(issue("warn",r,"표준 카테고리에 없는 대분류입니다. 요약표에서 기타 순서로 정렬됩니다."));const p=getQuarterPeriod(r.year,r.quarter);if(r.startDate&&!isValidDate(r.startDate))issues.push(issue("error",r,"시작일 형식이 올바르지 않습니다."));if(r.endDate&&!isValidDate(r.endDate))issues.push(issue("error",r,"종료일 형식이 올바르지 않습니다."));if(r.startDate&&isValidDate(r.startDate)){const s=new Date(r.startDate+"T00:00:00");if(s<p.start||s>p.end)issues.push(issue("error",r,`${r.quarter}분기 범위를 벗어난 시작일입니다.`))}if(r.endDate&&r.startDate&&isValidDate(r.startDate)&&isValidDate(r.endDate)){const s=new Date(r.startDate+"T00:00:00"),e=new Date(r.endDate+"T00:00:00");if(e<s)issues.push(issue("error",r,"종료일이 시작일보다 빠릅니다."));if(e<p.start||e>p.end)issues.push(issue("warn",r,`${r.quarter}분기 범위를 벗어난 종료일입니다.`))}numberFields.forEach(k=>{if(Number.isNaN(Number(r[k])))issues.push(issue("error",r,`${fieldLabel(k)} 값이 숫자가 아닙니다.`));if(Number(r[k])<0)issues.push(issue("error",r,`${fieldLabel(k)} 값은 음수로 입력할 수 없습니다.`))});if(Number(r.sessions)<=0)issues.push(issue("error",r,"회기 수는 1 이상이어야 합니다."));const total=calcTotal(r);if(Number(r.reportedTotal)!==total)issues.push(issue("error",r,`보고 총인원(${r.reportedTotal})과 대상별 합계(${total})가 일치하지 않습니다.`));if(total===0)issues.push(issue("warn",r,"총 참여인원이 0명입니다. 미운영 사업인지 확인해 주세요."));const dup=others.find(o=>o.id!==r.id&&norm(o.team)===norm(r.team)&&norm(o.category)===norm(r.category)&&norm(o.programName)===norm(r.programName)&&o.startDate===r.startDate);if(dup)issues.push(issue("warn",r,"팀·대분류·사업명·시작일이 같은 중복 실적이 있습니다."));return issues}
+function issue(level,r,message){return{level,id:r.id,programName:r.programName,message}}
+function renderSummary(list){const map=new Map();CATEGORY_ORDER.forEach(c=>map.set(c,{category:c,records:0,sessions:0,youth:0,total:0,revenue:0,expense:0}));list.forEach(r=>{const key=CATEGORY_ORDER.includes(r.category)?r.category:"기타";const row=map.get(key);row.records++;row.sessions+=Number(r.sessions||0);row.youth+=Number(r.youthCount||0);row.total+=calcTotal(r);row.revenue+=Number(r.revenue||0);row.expense+=Number(r.expense||0)});const rows=[...map.values()].filter(r=>r.records>0);els.summaryBody.innerHTML=rows.length?rows.map((r,i)=>`<tr><td>${i+1}</td><td>${esc(r.category)}</td><td class="mono">${fmt(r.records)}</td><td class="mono">${fmt(r.sessions)}</td><td class="mono">${fmt(r.youth)}</td><td class="mono">${fmt(r.total)}</td><td class="mono">${r.sessions?(r.total/r.sessions).toFixed(1):"0.0"}</td><td class="mono">${money(r.revenue)}</td><td class="mono">${money(r.expense)}</td></tr>`).join(""):'<tr><td colspan="9"><div class="empty-state">요약할 실적이 없습니다.</div></td></tr>'}
+function renderRecords(list){if(!list.length){els.recordsBody.innerHTML='<tr><td colspan="15"><div class="empty-state">아직 입력된 실적이 없습니다.</div></td></tr>';return}els.recordsBody.innerHTML=list.map(r=>{const issues=validateRecord(r,records.filter(o=>o.id!==r.id));const errors=issues.filter(i=>i.level==="error").length;const badge=errors?'<span class="badge error">오류</span>':issues.length?'<span class="badge warn">주의</span>':'<span class="badge ok">정상</span>';return`<tr><td>${badge}</td><td>${esc(r.team)}</td><td>${esc(r.category)}</td><td><strong>${esc(r.programName)}</strong><br><span class="small">${esc(r.manager||"")}</span></td><td class="mono">${esc(r.startDate)}${r.endDate?" ~ "+esc(r.endDate):""}</td><td class="mono">${fmt(r.sessions)}</td><td class="mono">${fmt(r.youthCount)}</td><td class="mono">${fmt(r.adultCount)}</td><td class="mono">${fmt(r.leaderCount)}</td><td class="mono">${fmt(r.reportedTotal)}</td><td class="mono">${fmt(calcTotal(r))}</td><td class="mono">${r.sessions?(calcTotal(r)/r.sessions).toFixed(1):"0.0"}</td><td class="mono">${money(r.revenue)}</td><td class="mono">${money(r.expense)}</td><td class="no-print"><div class="row-actions"><button class="ghost" onclick="editRecord('${r.id}')">수정</button><button class="danger" onclick="deleteRecord('${r.id}')">삭제</button></div></td></tr>`}).join("")}
+window.editRecord=id=>{const r=records.find(x=>x.id===id);if(r)fillForm(r)};window.deleteRecord=id=>{if(!confirm("이 실적을 삭제할까요?"))return;records=records.filter(r=>r.id!==id);saveRecords();renderAll()};
+function exportXlsx(){const list=getFilteredRecords();if(!list.length){alert("내보낼 실적이 없습니다.");return}const issues=getAllIssues(list);const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(list.map(recordToKorean)),"실적원장");XLSX.utils.book_append_sheet(wb,XLSX.utils.table_to_sheet($("summaryTable")),"카테고리요약");XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(issues.map(i=>({수준:i.level==="error"?"오류":"주의",프로그램:i.programName,내용:i.message}))),"검증결과");XLSX.writeFile(wb,`분기별_실적_${els.filterYear.value}_${els.filterQuarter.value}분기.xlsx`)}
+function exportCsv(){const list=getFilteredRecords();if(!list.length){alert("내보낼 실적이 없습니다.");return}const header=["연도","분기","팀명","대분류","세부유형","사업명","시작일","종료일","장소","대상","회기","청소년","성인","지도자","보고총인원","계산총인원","수입","지출","담당자","비고"];const rows=list.map(r=>[r.year,r.quarter,r.team,r.category,r.subCategory,r.programName,r.startDate,r.endDate,r.location,r.target,r.sessions,r.youthCount,r.adultCount,r.leaderCount,r.reportedTotal,calcTotal(r),r.revenue,r.expense,r.manager,r.memo]);downloadText(`분기별_실적_${els.filterYear.value}_${els.filterQuarter.value}분기.csv`,toCsv([header,...rows]),"text/csv;charset=utf-8")}
+function exportJson(){downloadText("quarter-performance-backup.json",JSON.stringify(records,null,2),"application/json")}
+function importJson(e){const f=e.target.files[0];if(!f)return;const reader=new FileReader();reader.onload=ev=>{try{const data=JSON.parse(ev.target.result);if(!Array.isArray(data))throw new Error("배열 형식이 아닙니다.");records=data;saveRecords();renderAll();alert("JSON 데이터를 불러왔습니다.")}catch(err){alert("JSON 파일을 읽을 수 없습니다: "+err.message)}};reader.readAsText(f)}
+function clearAll(){if(!confirm("전체 원장을 삭제할까요? 이 작업은 되돌릴 수 없습니다."))return;records=[];saveRecords();renderAll()}
+function loadSample(){const y=Number(els.filterYear.value),q=Number(els.filterQuarter.value);const start=quarterDefaultDate(y,q);records.push({id:uuid(),year:y,quarter:q,team:"청소년사업팀",category:"특별 프로그램 운영현황",subCategory:"스마트 체육관",programName:"출발 재미짐",startDate:start,endDate:start,location:"스마트 체육관",target:"초등 청소년",sessions:3,youthCount:36,adultCount:0,leaderCount:3,reportedTotal:39,revenue:180000,expense:0,manager:"담당자",memo:"예시 데이터",updatedAt:new Date().toISOString()});saveRecords();renderAll()}
+function recordToKorean(r){return{연도:r.year,분기:r.quarter,팀명:r.team,대분류:r.category,세부유형:r.subCategory,사업명:r.programName,시작일:r.startDate,종료일:r.endDate,장소:r.location,대상:r.target,회기:r.sessions,청소년:r.youthCount,성인:r.adultCount,지도자:r.leaderCount,보고총인원:r.reportedTotal,계산총인원:calcTotal(r),수입:r.revenue,지출:r.expense,담당자:r.manager,비고:r.memo}}
+function calcTotal(r){return Number(r.youthCount||0)+Number(r.adultCount||0)+Number(r.leaderCount||0)}function sum(list,key){return list.reduce((a,r)=>a+Number(r[key]||0),0)}function loadRecords(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY))||[]}catch{return[]}}function saveRecords(){localStorage.setItem(STORAGE_KEY,JSON.stringify(records))}function val(id){return $(id).value.trim()}function getNum(id){return Number($(id).value||0)}function num(v){if(v===null||v===undefined)return 0;const n=Number(String(v).replace(/[^0-9.-]/g,""));return Number.isFinite(n)?n:0}function fmt(n){return Number(n||0).toLocaleString("ko-KR")}function money(n){return Number(n||0).toLocaleString("ko-KR")}function esc(s){return String(s??"").replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]))}function norm(s){return String(s??"").replace(/\s+/g,"").toLowerCase()}function normalizeHeader(s){return norm(s).replace(/[()\[\]{}·ㆍ_\-/]/g,"")}function fieldLabel(k){return({team:"팀명",category:"대분류",subCategory:"세부유형",programName:"사업명",startDate:"시작일",endDate:"종료일",location:"장소",target:"대상",sessions:"회기",youthCount:"청소년",adultCount:"성인",leaderCount:"지도자",reportedTotal:"총인원",revenue:"수입",expense:"지출",manager:"담당자",memo:"비고"})[k]||k}function matchCategory(raw){const t=String(raw||"").trim();if(!t)return"기타";const exact=CATEGORY_ORDER.find(c=>c===t);if(exact)return exact;const n=norm(t);return CATEGORY_ORDER.find(c=>norm(c).includes(n)||n.includes(norm(c).slice(0,4)))||t}function getQuarterPeriod(year,q){const s=new Date(year,(q-1)*3,1),e=new Date(year,q*3,0);return{start:s,end:e}}function quarterDefaultDate(y,q){return `${y}-${String((q-1)*3+1).padStart(2,"0")}-01`}function isValidDate(s){return /^\d{4}-\d{2}-\d{2}$/.test(s)&&!Number.isNaN(new Date(s+"T00:00:00").getTime())}function toDateInput(v){if(!v)return"";let s=String(v).trim();if(/^\d{4}-\d{2}-\d{2}$/.test(s))return s;if(/^\d{4}[./]\d{1,2}[./]\d{1,2}/.test(s)){const p=s.split(/[./]/);return `${p[0]}-${p[1].padStart(2,"0")}-${p[2].slice(0,2).padStart(2,"0")}`}if(/^\d{1,2}[./]\d{1,2}/.test(s)){const y=els.filterYear.value;const p=s.split(/[./]/);return `${y}-${p[0].padStart(2,"0")}-${p[1].slice(0,2).padStart(2,"0")}`}return""}function uuid(){return crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random().toString(16).slice(2)}function toCsv(rows){return"\ufeff"+rows.map(r=>r.map(v=>`"${String(v??"").replace(/"/g,'""')}"`).join(",")).join("\n")}function downloadText(filename,text,type){const blob=new Blob([text],{type});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=filename;a.click();URL.revokeObjectURL(url)}
+</script>
 </body>
 </html>
