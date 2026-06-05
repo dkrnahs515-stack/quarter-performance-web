@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>분기별 사업 실적 취합 시트</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div>
+      <p class="eyebrow">Quarter Performance Collector</p>
+      <h1>분기별 사업 실적 취합 시트</h1>
+      <p class="subtitle">사업 실적 원장 입력 → 자체 검증 → 카테고리 순 정렬 → 분기 요약 출력</p>
+    </div>
+    <div class="header-actions no-print">
+      <button id="btnSample" class="ghost">예시 불러오기</button>
+      <button id="btnPrint" class="primary">요약 인쇄</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="panel controls no-print">
+      <div class="section-title">
+        <h2>기준 설정</h2>
+        <span>검증 기준</span>
+      </div>
+      <div class="grid-2">
+        <label>연도
+          <input id="filterYear" type="number" value="2026" min="2020" max="2100" />
+        </label>
+        <label>분기
+          <select id="filterQuarter">
+            <option value="1">1분기</option>
+            <option value="2">2분기</option>
+            <option value="3">3분기</option>
+            <option value="4">4분기</option>
+          </select>
+        </label>
+      </div>
+      <div class="hint-box">
+        <strong>검증 항목</strong>
+        <ul>
+          <li>필수 입력 누락, 날짜 형식, 분기 범위 이탈</li>
+          <li>종료일이 시작일보다 빠른 경우</li>
+          <li>보고 총인원과 대상별 인원 합계 불일치</li>
+          <li>회기·인원·금액 음수 입력, 중복 사업 의심</li>
+          <li>카테고리 표준 순서 자동 정렬</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="dashboard">
+      <article class="kpi-card">
+        <span>등록 사업</span>
+        <strong id="kpiRecords">0</strong>
+      </article>
+      <article class="kpi-card">
+        <span>총 회기</span>
+        <strong id="kpiSessions">0</strong>
+      </article>
+      <article class="kpi-card">
+        <span>총 참여인원</span>
+        <strong id="kpiPeople">0</strong>
+      </article>
+      <article class="kpi-card warning-card">
+        <span>검증 이슈</span>
+        <strong id="kpiIssues">0</strong>
+      </article>
+    </section>
+
+    <section class="panel form-panel no-print">
+      <div class="section-title">
+        <h2>사업 실적 입력</h2>
+        <span id="editingLabel">신규 입력</span>
+      </div>
+      <form id="recordForm">
+        <input id="recordId" type="hidden" />
+        <div class="form-grid">
+          <label>팀명 *
+            <select id="team" required>
+              <option value="">선택</option>
+              <option>운영지원팀</option>
+              <option>교육문화팀</option>
+              <option>청소년사업팀</option>
+              <option>청소년아지트</option>
+              <option>기타</option>
+            </select>
+          </label>
+          <label>대분류 *
+            <select id="category" required></select>
+          </label>
+          <label>세부유형
+            <input id="subCategory" placeholder="예: 학교연계, 인증제, 동아리, 정기강좌" />
+          </label>
+          <label>사업/프로그램명 *
+            <input id="programName" required placeholder="예: 출발 재미짐, 교육문화 프로그램" />
+          </label>
+          <label>시작일 *
+            <input id="startDate" type="date" required />
+          </label>
+          <label>종료일
+            <input id="endDate" type="date" />
+          </label>
+          <label>장소
+            <input id="location" placeholder="예: 강서청소년회관, 스마트 체육관" />
+          </label>
+          <label>대상
+            <input id="target" placeholder="예: 초등 청소년, 지역주민, 지도자" />
+          </label>
+          <label>회기 수 *
+            <input id="sessions" type="number" min="0" step="1" value="1" required />
+          </label>
+          <label>청소년 인원 *
+            <input id="youthCount" type="number" min="0" step="1" value="0" required />
+          </label>
+          <label>성인/보호자 인원
+            <input id="adultCount" type="number" min="0" step="1" value="0" />
+          </label>
+          <label>지도자/인솔자 인원
+            <input id="leaderCount" type="number" min="0" step="1" value="0" />
+          </label>
+          <label>총 참여인원 보고값 *
+            <input id="reportedTotal" type="number" min="0" step="1" value="0" required />
+          </label>
+          <label>수입
+            <input id="revenue" type="number" step="1000" value="0" />
+          </label>
+          <label>지출
+            <input id="expense" type="number" step="1000" value="0" />
+          </label>
+          <label>담당자
+            <input id="manager" placeholder="담당자명" />
+          </label>
+          <label class="wide">비고/근거
+            <textarea id="memo" rows="3" placeholder="증빙자료, 특이사항, 산출 근거 등을 입력"></textarea>
+          </label>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="primary">저장/수정</button>
+          <button type="button" id="btnReset" class="ghost">입력 초기화</button>
+          <button type="button" id="btnAutoTotal" class="ghost">총인원 자동계산</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel validation-panel">
+      <div class="section-title">
+        <h2>자체 검증 결과</h2>
+        <span id="validationStatus">대기</span>
+      </div>
+      <div id="validationList" class="validation-list"></div>
+    </section>
+
+    <section class="panel">
+      <div class="section-title">
+        <h2>카테고리별 요약</h2>
+        <span>표준 순서 자동 정렬</span>
+      </div>
+      <div class="table-wrap">
+        <table id="summaryTable">
+          <thead>
+            <tr>
+              <th>순서</th>
+              <th>대분류</th>
+              <th>사업 수</th>
+              <th>회기</th>
+              <th>청소년</th>
+              <th>총 참여</th>
+              <th>평균 인원</th>
+              <th>수입</th>
+              <th>지출</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel records-panel">
+      <div class="section-title">
+        <h2>실적 원장</h2>
+        <div class="button-row no-print">
+          <button id="btnExportCsv" class="ghost">CSV 내보내기</button>
+          <button id="btnExportJson" class="ghost">JSON 백업</button>
+          <label class="file-button">JSON 불러오기
+            <input id="importJson" type="file" accept="application/json" />
+          </label>
+          <button id="btnClearAll" class="danger">전체 삭제</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table id="recordsTable">
+          <thead>
+            <tr>
+              <th>상태</th>
+              <th>팀</th>
+              <th>대분류</th>
+              <th>프로그램명</th>
+              <th>기간</th>
+              <th>회기</th>
+              <th>청소년</th>
+              <th>성인</th>
+              <th>지도자</th>
+              <th>보고 총인원</th>
+              <th>계산 총인원</th>
+              <th>평균</th>
+              <th>수입</th>
+              <th>지출</th>
+              <th class="no-print">관리</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <template id="emptyTemplate">
+    <div class="empty-state">아직 입력된 실적이 없습니다. 예시를 불러오거나 새 실적을 입력해 주세요.</div>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
